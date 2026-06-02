@@ -29,7 +29,17 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html{height:100%;}
-body{height:100%;font-family:'Barlow',sans-serif;background:var(--bg);color:var(--tx);overflow:hidden;display:flex;flex-direction:column;}
+html{height:100%;overflow:hidden;}
+body{height:100%;font-family:'Barlow',sans-serif;background:var(--bg);color:var(--tx);overflow:hidden;overflow-x:hidden;display:flex;flex-direction:column;-webkit-overflow-scrolling:touch;touch-action:pan-y;}
+/* blocca swipe orizzontale → pagina nera */
+*{-webkit-tap-highlight-color:transparent;}
+.page{touch-action:pan-y;}
+/* chip filtro storico */
+.sf-chip{height:34px;padding:0 12px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s;}
+.sf-chip:active{transform:scale(.95);}
+.sf-chip:not(.active){background:none!important;border-color:var(--bd)!important;color:var(--tx3)!important;opacity:.5;text-decoration:line-through;}
+.sf-inp{height:38px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:14px;padding:0 10px;outline:none;}
+.sf-inp:focus{border-color:var(--bl);}
 
 /* ── ORIENTATION ── */
 @media screen and (orientation:landscape){
@@ -442,8 +452,25 @@ body{height:100%;font-family:'Barlow',sans-serif;background:var(--bg);color:var(
     <div class="stat-card"><div class="num rd" id="s-plt-out">0</div><div class="lab">PLT Usciti oggi</div></div>
     <div class="stat-card"><div class="num og" id="s-bilici-secco">—</div><div class="lab">Bilici disp. Secco</div></div>
     <div class="stat-card"><div class="num pu" id="s-marchesi">0</div><div class="lab">PLT Marchesi</div></div>
-    <div class="stat-card"><div class="num gn" id="s-last-secco" style="font-size:26px;">—</div><div class="lab">Ultimo Secco</div></div>
-    <div class="stat-card"><div class="num cy" id="s-last-fresco" style="font-size:26px;">—</div><div class="lab">Ultimo Fresco</div></div>
+    <div class="stat-card" style="cursor:default;">
+      <div class="num gn" id="s-plt-mese-in">0</div>
+      <div class="lab">⬆ PLT Entrati Mese</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:4px;">
+        <button onclick="navMeseGest(-1)" style="background:none;border:none;color:var(--gb);font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">‹</button>
+        <span id="g-plt-mese-lbl" style="font-size:10px;color:var(--tx2);cursor:pointer;text-decoration:underline dotted;" onclick="apriSelettoreMeseGest()" title="Cambia mese"></span>
+        <button onclick="navMeseGest(1)" style="background:none;border:none;color:var(--gb);font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">›</button>
+      </div>
+      <input type="month" id="g-mese-picker" style="display:none;position:absolute;" onchange="selezionaMeseGest(this.value)">
+    </div>
+    <div class="stat-card" style="cursor:default;">
+      <div class="num rd" id="s-plt-mese-out">0</div>
+      <div class="lab">⬇ PLT Usciti Mese</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:4px;">
+        <button onclick="navMeseGest(-1)" style="background:none;border:none;color:var(--rb);font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">‹</button>
+        <span id="g-plt-mese-lbl2" style="font-size:10px;color:var(--tx2);"></span>
+        <button onclick="navMeseGest(1)" style="background:none;border:none;color:var(--rb);font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">›</button>
+      </div>
+    </div>
   </div>
 
   <!-- 3 box entrate di oggi -->
@@ -874,24 +901,36 @@ body{height:100%;font-family:'Barlow',sans-serif;background:var(--bg);color:var(
       <button class="close" onclick="chiO('sh-storico')">&#x2715;</button>
     </div>
   </div>
-  <div style="padding:10px 16px;border-bottom:1px solid var(--bd);">
-    <div class="sf-row">
-      <input class="sf-inp" id="sf-num" placeholder="Bilico" oninput="filtraStorico()">
-      <input class="sf-inp" id="sf-loc" placeholder="Locazione" oninput="filtraStorico()">
-      <select class="sf-inp" id="sf-tipo" onchange="filtraStorico()" style="flex:.8;">
-        <option value="">Tutti</option>
-        <option value="ENTRATA">Entrata</option>
-        <option value="USCITA">Uscita</option>
-        <option value="MODIFICA">Modifica</option>
-        <option value="TRASFERIMENTO">Trasferi.</option>
-      </select>
+  <div style="padding:10px 14px;border-bottom:1px solid var(--bd);">
+    <!-- Riga 1: bilico + locazione -->
+    <div style="display:flex;gap:7px;margin-bottom:8px;">
+      <input class="sf-inp" id="sf-num" placeholder="🔍 N° Bilico" oninput="filtraStorico()" style="flex:1;">
+      <input class="sf-inp" id="sf-loc" placeholder="📍 Locazione" oninput="filtraStorico()" style="flex:1;">
     </div>
-    <div class="sf-row">
-      <input class="sf-inp" id="sf-da" type="date" oninput="filtraStorico()" onclick="try{this.showPicker()}catch(e){}">
-      <input class="sf-inp" id="sf-a" type="date" oninput="filtraStorico()" onclick="try{this.showPicker()}catch(e){}">
-      <button onclick="resetFiltriStorico()" style="background:var(--sf2);border:1px solid var(--bd);border-radius:8px;color:var(--tx2);padding:0 12px;font-size:13px;">&#x21BA;</button>
+    <!-- Riga 2: date -->
+    <div style="display:flex;gap:7px;margin-bottom:10px;">
+      <input class="sf-inp" id="sf-da" type="date" oninput="filtraStorico()" onclick="try{this.showPicker()}catch(e){}" style="flex:1;font-size:13px;">
+      <input class="sf-inp" id="sf-a" type="date" oninput="filtraStorico()" onclick="try{this.showPicker()}catch(e){}" style="flex:1;font-size:13px;">
     </div>
-    <div id="sf-count" style="font-size:12px;color:var(--tx2);margin-top:4px;"></div>
+    <!-- Riga 3: chip Tipo Merce -->
+    <div style="font-size:10px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;">Tipo Merce</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+      <button class="sf-chip active" id="chip-secco" data-filter="merce" onclick="toggleChipStor(this)" style="background:rgba(210,153,34,.15);border:1px solid var(--og);color:var(--ob);">📦 Secco</button>
+      <button class="sf-chip active" id="chip-fresco" data-filter="merce" onclick="toggleChipStor(this)" style="background:rgba(31,111,235,.15);border:1px solid var(--bl);color:var(--bb);">❄️ Fresco</button>
+      <button class="sf-chip active" id="chip-marchesi" data-filter="merce" onclick="toggleChipStor(this)" style="background:rgba(110,64,201,.15);border:1px solid var(--pu);color:var(--pb);">🏭 Marchesi</button>
+    </div>
+    <!-- Riga 4: chip Tipo Movimento -->
+    <div style="font-size:10px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;">Tipo Movimento</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+      <button class="sf-chip active" id="chip-entrata" data-filter="mov" onclick="toggleChipStor(this)" style="background:rgba(46,160,67,.15);border:1px solid var(--gn);color:var(--gb);">🟢 Entrata</button>
+      <button class="sf-chip active" id="chip-uscita" data-filter="mov" onclick="toggleChipStor(this)" style="background:rgba(218,54,51,.15);border:1px solid var(--rd);color:var(--rb);">🔴 Uscita</button>
+      <button class="sf-chip active" id="chip-modifica" data-filter="mov" onclick="toggleChipStor(this)" style="background:rgba(210,153,34,.15);border:1px solid var(--og);color:var(--ob);">✏️ Modifica</button>
+      <button class="sf-chip active" id="chip-trasf" data-filter="mov" onclick="toggleChipStor(this)" style="background:rgba(13,148,136,.15);border:1px solid var(--cy);color:var(--cb);">🔄 Trasf.</button>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div id="sf-count" style="font-size:12px;color:var(--tx2);"></div>
+      <button onclick="resetFiltriStorico()" style="background:var(--sf2);border:1px solid var(--bd);border-radius:8px;color:var(--tx2);padding:6px 12px;font-size:12px;font-weight:700;">↺ Reset</button>
+    </div>
   </div>
   <div id="stor-list" style="padding:0 16px;"></div>
   <div style="height:20px;"></div>
@@ -1238,7 +1277,7 @@ function cercaUtente(u,p,cb){
 function salvaTentativo(username){var ts=new Date().toISOString(),ua=navigator.userAgent,dev='Desktop';if(/iPhone/.test(ua))dev='iPhone';else if(/iPad/.test(ua))dev='iPad';else if(/Android/.test(ua))dev='Android';var log={username_lc:username.toLowerCase(),ts:ts,device:dev};if(UC&&fdb)fdb.collection('login_log').add(log).catch(function(){});else{var logs=JSON.parse(localStorage.getItem('LOGIN_LOG_v1')||'[]');logs.unshift(log);if(logs.length>200)logs=logs.slice(0,200);try{localStorage.setItem('LOGIN_LOG_v1',JSON.stringify(logs));}catch(x){}}}
 function applicaLivello(lvl){
   lvl=parseInt(lvl)||0;
-  if(lvl===1){logout();window.location.href='operatore.html';return;}
+  if(lvl===1){logout();var ov=document.getElementById('overlay-no-access');if(ov)ov.style.display='flex';return;}
   document.body.setAttribute('data-lvl',String(lvl));
   var isAdm=(lvl===0||lvl===2);
   ['menu-tile-export','menu-tile-import','menu-tile-foto','menu-tile-utenti'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display=isAdm?'flex':'none';});
@@ -1840,6 +1879,32 @@ function initEntratteAttese(){
   });
 }
 
+// ═══ MESE PLT GESTIONE ═══
+var _meseGest=(function(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');})();
+var _mesiNomiG=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+function _aggMeseGestLbl(){
+  var p=_meseGest.split('-');var lbl=_mesiNomiG[parseInt(p[1])-1]+' '+p[0];
+  var l1=document.getElementById('g-plt-mese-lbl');if(l1)l1.textContent=lbl;
+  var l2=document.getElementById('g-plt-mese-lbl2');if(l2)l2.textContent=lbl;
+  var pk=document.getElementById('g-mese-picker');if(pk)pk.value=_meseGest;
+}
+function navMeseGest(dir){
+  var p=_meseGest.split('-');var anno=parseInt(p[0]);var mese=parseInt(p[1])-1+dir;
+  if(mese>11){mese=0;anno++;}else if(mese<0){mese=11;anno--;}
+  _meseGest=anno+'-'+String(mese+1).padStart(2,'0');
+  _aggMeseGestLbl();aggiornaBoxMeseGest();
+}
+function selezionaMeseGest(val){if(!val)return;_meseGest=val;_aggMeseGestLbl();aggiornaBoxMeseGest();}
+function apriSelettoreMeseGest(){var pk=document.getElementById('g-mese-picker');if(!pk)return;pk.value=_meseGest;try{pk.showPicker();}catch(e){pk.style.display='block';setTimeout(function(){pk.style.display='none';},3000);}}
+function aggiornaBoxMeseGest(){
+  var p=_meseGest.split('-');var anno=parseInt(p[0]);var mese=parseInt(p[1])-1;
+  var movM=ST.filter(function(m){if(!m.ts)return false;var d=new Date(m.ts);return d.getMonth()===mese&&d.getFullYear()===anno;});
+  var pIn=movM.reduce(function(s,m){return m.tipo==='ENTRATA'?s+(m.bancali||0):s;},0);
+  var pOut=movM.reduce(function(s,m){return m.tipo==='USCITA'?s+(m.bancaliUsciti!=null?m.bancaliUsciti:(m.bancali||0)):s;},0);
+  var eI=document.getElementById('s-plt-mese-in');if(eI)eI.textContent=pIn;
+  var eO=document.getElementById('s-plt-mese-out');if(eO)eO.textContent=pOut;
+}
+
 function aggiornaBoxAttesi(){
   var oggi=new Date().toDateString();
   var movOggi=ST.filter(function(m){return m.tipo==='ENTRATA'&&new Date(m.ts).toDateString()===oggi;});
@@ -2188,23 +2253,55 @@ function salvaStruttura(){var pp=parseInt(document.getElementById('str-posti-plt
 
 // ═══ STORICO ═══
 function apriStorico(){resetFiltriStorico();aprO('sh-storico');}
+// ═══ CHIP FILTRO STORICO ═══
+function toggleChipStor(btn){
+  btn.classList.toggle('active');
+  // se tutti della stessa categoria vengono disattivati → riattiva tutti
+  var cat=btn.getAttribute('data-filter');
+  var chips=document.querySelectorAll('.sf-chip[data-filter="'+cat+'"]');
+  var attivi=document.querySelectorAll('.sf-chip[data-filter="'+cat+'"].active');
+  if(attivi.length===0)chips.forEach(function(c){c.classList.add('active');});
+  filtraStorico();
+}
 function filtraStorico(){
   var el=document.getElementById('stor-list');if(!el)return;
   var sfNum=(document.getElementById('sf-num').value||'').trim().toUpperCase();
   var sfLoc=(document.getElementById('sf-loc').value||'').trim().toUpperCase();
-  var sfTipo=(document.getElementById('sf-tipo').value||'').trim();
   var sfDa=(document.getElementById('sf-da').value||'').trim();
   var sfA=(document.getElementById('sf-a').value||'').trim();
+  // chip movimento
+  var movOn=[];
+  var chipMap={entrata:'ENTRATA',uscita:'USCITA',modifica:'MODIFICA',trasf:'TRASFERIMENTO'};
+  Object.keys(chipMap).forEach(function(k){var c=document.getElementById('chip-'+k);if(c&&c.classList.contains('active'))movOn.push(chipMap[k]);});
+  // chip merce
+  var merceSecco=document.getElementById('chip-secco')&&document.getElementById('chip-secco').classList.contains('active');
+  var merceFresc=document.getElementById('chip-fresco')&&document.getElementById('chip-fresco').classList.contains('active');
+  var merceMarch=document.getElementById('chip-marchesi')&&document.getElementById('chip-marchesi').classList.contains('active');
   var lista=ST.slice();
   if(sfNum)lista=lista.filter(function(m){return String(m.numero||'').toUpperCase().indexOf(sfNum)!==-1;});
   if(sfLoc)lista=lista.filter(function(m){return(String(m.locazione||'')+String(m.locazioneDa||'')+String(m.locazioneA||'')).toUpperCase().indexOf(sfLoc)!==-1;});
-  if(sfTipo)lista=lista.filter(function(m){return m.tipo===sfTipo;});
   if(sfDa)lista=lista.filter(function(m){return m.ts&&m.ts.slice(0,10)>=sfDa;});
   if(sfA)lista=lista.filter(function(m){return m.ts&&m.ts.slice(0,10)<=sfA;});
+  // filtro movimento (chip)
+  if(movOn.length>0&&movOn.length<4)lista=lista.filter(function(m){return movOn.indexOf(m.tipo)!==-1;});
+  // filtro merce (chip)
+  if(!merceSecco||!merceFresc||!merceMarch){
+    lista=lista.filter(function(m){
+      var isMarch=/[a-zA-Z]/.test(String(m.numero||''));
+      var isFresc=(m.locazione||m.locazioneA||'').toUpperCase()==='FRESCO';
+      if(isMarch)return merceMarch;
+      if(isFresc)return merceFresc;
+      return merceSecco;
+    });
+  }
   var cnt=document.getElementById('sf-count');if(cnt)cnt.textContent=lista.length+' movimenti';
   el.innerHTML=lista.length?lista.map(function(m){return lgDel(m);}).join(''):'<div class="empty"><div class="ic">📋</div><p>Nessun risultato</p></div>';
 }
-function resetFiltriStorico(){['sf-num','sf-loc','sf-da','sf-a'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});var s=document.getElementById('sf-tipo');if(s)s.value='';filtraStorico();}
+function resetFiltriStorico(){
+  ['sf-num','sf-loc','sf-da','sf-a'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  document.querySelectorAll('.sf-chip').forEach(function(c){c.classList.add('active');});
+  filtraStorico();
+}
 
 // ═══ NOTA STORICO ═══
 var _notaStorId=null;
@@ -2377,10 +2474,10 @@ function ui(){
   // ultimi entrati
   var lst2=ST.filter(function(m){return m.tipo==='ENTRATA';});
   var ultS=null,ultF=null;for(var i=0;i<lst2.length;i++){if((lst2[i].locazione||'').toUpperCase()==='FRESCO'){if(!ultF)ultF=lst2[i];}else{if(!ultS)ultS=lst2[i];}if(ultS&&ultF)break;}
-  _s('s-last-secco',ultS?'#'+ultS.numero:'—');_s('s-last-fresco',ultF?'#'+ultF.numero:'—');
   var mc=document.getElementById('menu-mag-sub');if(mc)mc.textContent=lst.length+' bilici in magazzino';
   aggiornaBadgeCarrellista();aggiornaBadgeMissioni();
   aggiornaBoxAttesi();
+  _aggMeseGestLbl();aggiornaBoxMeseGest();
 }
 </script>
 </body>

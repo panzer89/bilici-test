@@ -1786,7 +1786,7 @@ function cercaUtente(u,p,cb){
 function salvaTentativo(username){var ts=new Date().toISOString(),ua=navigator.userAgent,dev='Desktop';if(/iPhone/.test(ua))dev='iPhone';else if(/iPad/.test(ua))dev='iPad';else if(/Android/.test(ua))dev='Android';var log={username_lc:username.toLowerCase(),ts:ts,device:dev};if(UC&&fdb)fdb.collection('login_log').add(log).catch(function(){});else{var logs=JSON.parse(localStorage.getItem('LOGIN_LOG_v1')||'[]');logs.unshift(log);if(logs.length>200)logs=logs.slice(0,200);try{localStorage.setItem('LOGIN_LOG_v1',JSON.stringify(logs));}catch(x){}}}
 function applicaLivello(lvl){
   lvl=parseInt(lvl)||0;
-  if(lvl===1){logout();window.location.href='operatore.html';return;}
+  if(lvl===1){logout();var ov=document.getElementById('overlay-no-access');if(ov)ov.style.display='flex';return;}
   document.body.setAttribute('data-lvl',String(lvl));
   var isAdm=(lvl===0||lvl===2);
   var isMaster=CURR_USER&&CURR_USER.username.toLowerCase()===ADMIN_DEFAULT.username.toLowerCase();
