@@ -991,7 +991,7 @@ function aggiornaBadges(){
   if(bu){bu.textContent=nU;bu.classList.toggle('vis',nU>0);}
   // badge carrellista
   var nS=Object.values(BL).filter(function(b){return(b.locazione||'').toUpperCase()==='ARRIVI';}).length;
-  var nP=PROG.filter(function(p){return p.id&&!PROG_PREPARATO[p.id];}).length;
+  var nP=PROG.filter(function(p){var b=BL[p.numero];return p.id&&!PROG_PREPARATO[p.id]&&(!b||(b.locazione||'').toUpperCase()!=='FRESCO');}).length;
   var nM=MISSIONI.filter(function(m){return m.stato!=='caricata';}).length;
   var totCar=nS+nP+nM;
   var bc=document.getElementById('badge-carrellista');

@@ -1743,7 +1743,7 @@ function renderCarrellistaPreparare(){
 }
 function aggiornaBadgeCarrellista(){
   var nS=Object.values(BL).filter(function(b){return(b.locazione||'').toUpperCase()==='ARRIVI';}).length;
-  var nP=PROG.filter(function(p){return p.id&&!PROG_PREPARATO[p.id];}).length;
+  var nP=PROG.filter(function(p){var b=BL[p.numero];return p.id&&!PROG_PREPARATO[p.id]&&(!b||(b.locazione||'').toUpperCase()!=='FRESCO');}).length;
   var tot=nS+nP;
   var badge=document.getElementById('badge-carrellista');
   if(badge){badge.textContent=tot;badge.style.display=tot>0?'inline-block':'none';}

@@ -1903,7 +1903,7 @@ function aggiornaBadgeMissioni(){
 }
 function aggiornaBadgeCarrellista(){
   var nS=Object.values(BL).filter(function(b){return(b.locazione||'').toUpperCase()==='ARRIVI';}).length;
-  var nP=PROG.filter(function(p){return p.id&&!PROG_PREPARATO[p.id];}).length;
+  var nP=PROG.filter(function(p){var b=BL[p.numero];return p.id&&!PROG_PREPARATO[p.id]&&(!b||(b.locazione||'').toUpperCase()!=='FRESCO');}).length;
   var tot=nS+nP;
   var b=document.getElementById('sb-car-badge');if(b){b.textContent=tot;b.classList.toggle('show',tot>0);}
   var bt=document.getElementById('badge-tab-stoc');if(bt){bt.textContent=nS;bt.style.display=nS>0?'block':'none';}
