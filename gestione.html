@@ -91,9 +91,9 @@ body{height:100%;font-family:'Barlow',sans-serif;background:var(--bg);color:var(
 .page.active{display:block;}
 
 /* ── STAT STRIP ── */
-.stat-strip{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd);margin-bottom:1px;}
-.stat-card{background:var(--sf);padding:16px 14px;}
-.stat-card .num{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;line-height:1;}
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bd);margin-bottom:1px;}
+.stat-card{background:var(--sf);padding:12px 8px;}
+.stat-card .num{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;line-height:1;}
 .stat-card .num.og{color:var(--ob);}
 .stat-card .num.cy{color:var(--cb);}
 .stat-card .num.gn{color:var(--gb);}
@@ -471,37 +471,36 @@ body{height:100%;font-family:'Barlow',sans-serif;background:var(--bg);color:var(
         <button onclick="navMeseGest(1)" style="background:none;border:none;color:var(--rb);font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">›</button>
       </div>
     </div>
-  </div>
-
-  <!-- 3 box entrate di oggi -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--bd);margin-bottom:1px;">
+    <!-- riga 3: 3 box oggi + 1 cella vuota -->
     <div class="stat-card" onclick="apriSetAttesi('secco')" style="cursor:pointer;position:relative;">
-      <div style="position:absolute;top:6px;right:8px;font-size:10px;color:var(--tx3);">✏️</div>
-      <div style="display:flex;align-items:baseline;gap:4px;">
+      <div style="position:absolute;top:4px;right:6px;font-size:9px;color:var(--tx3);">✏️</div>
+      <div style="display:flex;align-items:baseline;gap:3px;">
         <div class="num og" id="s-ent-secco-oggi">0</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;color:var(--tx2);">/<span id="s-ent-secco-att">?</span></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--tx2);">/<span id="s-ent-secco-att">?</span></div>
       </div>
       <div class="lab">📦 Secco oggi</div>
       <div class="sub">bilici entrati</div>
     </div>
     <div class="stat-card" onclick="apriSetAttesi('fresco')" style="cursor:pointer;position:relative;">
-      <div style="position:absolute;top:6px;right:8px;font-size:10px;color:var(--tx3);">✏️</div>
-      <div style="display:flex;align-items:baseline;gap:4px;">
+      <div style="position:absolute;top:4px;right:6px;font-size:9px;color:var(--tx3);">✏️</div>
+      <div style="display:flex;align-items:baseline;gap:3px;">
         <div class="num cy" id="s-ent-fresco-oggi">0</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;color:var(--tx2);">/<span id="s-ent-fresco-att">?</span></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--tx2);">/<span id="s-ent-fresco-att">?</span></div>
       </div>
       <div class="lab">❄️ Fresco oggi</div>
       <div class="sub">bilici entrati</div>
     </div>
     <div class="stat-card" onclick="apriSetAttesi('marchesi')" style="cursor:pointer;position:relative;">
-      <div style="position:absolute;top:6px;right:8px;font-size:10px;color:var(--tx3);">✏️</div>
-      <div style="display:flex;align-items:baseline;gap:4px;">
+      <div style="position:absolute;top:4px;right:6px;font-size:9px;color:var(--tx3);">✏️</div>
+      <div style="display:flex;align-items:baseline;gap:3px;">
         <div class="num pu" id="s-ent-march-oggi">0</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;color:var(--tx2);">/<span id="s-ent-march-att">?</span></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--tx2);">/<span id="s-ent-march-att">?</span></div>
       </div>
       <div class="lab">🏭 Marchesi oggi</div>
       <div class="sub">PLT entrati</div>
     </div>
+    <!-- 4a cella ultima riga: vuota -->
+    <div class="stat-card" style="background:var(--sf2);opacity:.3;"></div>
   </div>
 
   <!-- Missioni attive -->
@@ -903,14 +902,14 @@ body{height:100%;font-family:'Barlow',sans-serif;background:var(--bg);color:var(
   </div>
   <div style="padding:10px 14px;border-bottom:1px solid var(--bd);">
     <!-- Riga 1: bilico + locazione -->
-    <div style="display:flex;gap:7px;margin-bottom:8px;">
-      <input class="sf-inp" id="sf-num" placeholder="🔍 N° Bilico" oninput="filtraStorico()" style="flex:1;">
-      <input class="sf-inp" id="sf-loc" placeholder="📍 Locazione" oninput="filtraStorico()" style="flex:1;">
+    <div style="display:flex;gap:7px;margin-bottom:8px;width:100%;min-width:0;">
+      <input class="sf-inp" id="sf-num" placeholder="🔍 Bilico" oninput="filtraStorico()" style="flex:1;min-width:0;">
+      <input class="sf-inp" id="sf-loc" placeholder="📍 Locaz." oninput="filtraStorico()" style="flex:1;min-width:0;">
     </div>
-    <!-- Riga 2: date -->
-    <div style="display:flex;gap:7px;margin-bottom:10px;">
-      <input class="sf-inp" id="sf-da" type="date" oninput="filtraStorico()" onclick="try{this.showPicker()}catch(e){}" style="flex:1;font-size:13px;">
-      <input class="sf-inp" id="sf-a" type="date" oninput="filtraStorico()" onclick="try{this.showPicker()}catch(e){}" style="flex:1;font-size:13px;">
+    <!-- Riga 2: date (una sotto l'altra su mobile) -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;width:100%;">
+      <input class="sf-inp" id="sf-da" type="date" oninput="filtraStorico()" onclick="try{this.showPicker()}catch(e){}" style="width:100%;font-size:12px;padding:0 6px;">
+      <input class="sf-inp" id="sf-a" type="date" oninput="filtraStorico()" onclick="try{this.showPicker()}catch(e){}" style="width:100%;font-size:12px;padding:0 6px;">
     </div>
     <!-- Riga 3: chip Tipo Merce -->
     <div style="font-size:10px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;">Tipo Merce</div>
@@ -1722,20 +1721,48 @@ function renderMagazzino(){
   var tr=q?lst.filter(function(b){return SMM==='b'?b.numero.includes(q):b.locazione.includes(q);}):lst.sort(function(a,b){return a.numero.localeCompare(b.numero);});
   if(!tr.length){el.innerHTML='<div class="empty"><div class="ic">🚛</div><p>'+(q?'Nessun risultato':'Magazzino vuoto')+'</p></div>';return;}
   var html='<div style="background:var(--sf);border-radius:var(--r);overflow:hidden;margin-top:12px;">';
+  var _magCache=window._magCache||{};window._magCache=_magCache;
   tr.forEach(function(b){
     var pren=isPrenotato(b.numero);
+    var ckey='mag_'+b.numero;
+    _magCache[ckey]={numero:b.numero};
     html+='<div class="bil-row">';
     html+='<div class="bil-row-num"><small>#</small>'+b.numero+'</div>';
     html+='<div class="bil-row-info"><div class="bil-loc">📍 '+b.locazione+'</div><div class="bil-plt">📦 '+b.bancali+' bancali'+(b.note?' · '+b.note:'')+'</div>'+(pren?'<span class="bil-pren">📌 PRENOTATO</span>':'')+'</div>';
-    html+='<div class="bil-acts">';
-    html+='<button class="bil-act-btn rd" onclick="caricaVeloce(\''+b.numero+'\')">🔴 Carica</button>';
-    html+='<button class="bil-act-btn cy" onclick="apriTrasferisci(\''+b.numero+'\')">🔄 Trasferi.</button>';
-    if(isAdmin())html+='<button class="bil-act-btn" style="background:none;border:1px solid var(--bd);color:var(--tx2);" onclick="apriModifica(\''+b.numero+'\')">✏️</button>';
-    if(isAdmin())html+='<button class="bil-act-btn" style="background:none;border:1px solid var(--rd);color:var(--rb);" onclick="eliminaBilico(\''+b.numero+'\')">🗑</button>';
-    html+='</div></div>';
+    html+='<button onclick="apriAzioniBilico(\''+ckey+'\')" style="flex-shrink:0;width:38px;height:38px;background:var(--sf2);border:1px solid var(--bd);border-radius:50%;color:var(--tx2);font-size:18px;display:flex;align-items:center;justify-content:center;margin-left:6px;">&#x22EF;</button>';
+    html+='</div>';
   });
   html+='</div>';
   el.innerHTML=html;
+}
+
+// ═══ AZIONI BILICO (magazzino mobile) ═══
+function apriAzioniBilico(key){
+  var cache=window._magCache||{};var p=cache[key];if(!p)return;
+  var b=BL[p.numero];if(!b)return;
+  // usa il modal sh-azioni-ordine già esistente
+  var numH=document.getElementById('sh-az-num');
+  var metaH=document.getElementById('sh-az-meta');
+  var el=document.getElementById('sh-az-actions');
+  if(!el){
+    var mo=document.createElement('div');mo.className='overlay';mo.id='sh-azioni-ordine';
+    mo.innerHTML='<div class="sheet"><div class="sheet-handle"></div><div id="sh-az-num" style="font-family:\'Barlow Condensed\',sans-serif;font-size:22px;font-weight:900;color:var(--bb);text-align:center;margin-bottom:3px;padding:12px 16px 0;"></div><div id="sh-az-meta" style="font-size:13px;color:var(--tx2);text-align:center;margin-bottom:12px;padding:0 16px;"></div><div style="padding:0 12px 20px;display:flex;flex-direction:column;gap:6px;" id="sh-az-actions"></div></div>';
+    document.body.appendChild(mo);
+    numH=document.getElementById('sh-az-num');metaH=document.getElementById('sh-az-meta');el=document.getElementById('sh-az-actions');
+  }
+  if(numH)numH.textContent='#'+b.numero;
+  if(metaH)metaH.textContent='📍 '+b.locazione+' · 📦 '+b.bancali+' bancali';
+  var aStyle='display:flex;align-items:center;gap:12px;padding:14px;background:var(--sf2);border-radius:12px;border:none;color:var(--tx);font-size:16px;font-weight:600;width:100%;text-align:left;cursor:pointer;';
+  var btns=[];
+  btns.push('<button style="'+aStyle+'background:rgba(218,54,51,.15);color:var(--rb);" onclick="chiO(\'sh-azioni-ordine\');caricaVeloce(\''+b.numero+'\')"><span style="font-size:20px;">🔴</span> Carica bilico</button>');
+  btns.push('<button style="'+aStyle+'background:rgba(13,148,136,.1);color:var(--cb);" onclick="chiO(\'sh-azioni-ordine\');apriTrasferisci(\''+b.numero+'\')"><span style="font-size:20px;">🔄</span> Trasferisci</button>');
+  if(isAdmin()){
+    btns.push('<button style="'+aStyle+'" onclick="chiO(\'sh-azioni-ordine\');apriModifica(\''+b.numero+'\')"><span style="font-size:20px;">✏️</span> Modifica bilico</button>');
+    btns.push('<button style="'+aStyle+'background:rgba(218,54,51,.08);color:var(--rb);" onclick="chiO(\'sh-azioni-ordine\');eliminaBilico(\''+b.numero+'\')"><span style="font-size:20px;">🗑</span> Elimina bilico</button>');
+  }
+  btns.push('<button style="'+aStyle+'background:var(--bd);justify-content:center;" onclick="chiO(\'sh-azioni-ordine\')">Annulla</button>');
+  el.innerHTML=btns.join('');
+  aprO('sh-azioni-ordine');
 }
 
 // ═══ CARRELLISTA ═══
@@ -2351,15 +2378,17 @@ function renderListaUtenti(lista){
     // Calcola permessi
     var puoGestire=false,bloccaMsg='';
     if(isMaster){
-      puoGestire=true; // Leo può tutto
+      puoGestire=true; // Leo predomina su tutti
     }else if(currLvl===0){
-      // Admin: solo operatori e se stesso
-      if(isOwn||lvl===1) puoGestire=true;
-      else bloccaMsg=lvl===2?'🔒 Non puoi gestire account Plus':'🔒 Non puoi gestire altri Admin';
+      // Admin (non Leo): solo operatori (lvl 1) e se stesso
+      if(lvl===0&&!isOwn){bloccaMsg='🔒 Non puoi gestire altri Admin';}
+      else if(lvl===2){bloccaMsg='🔒 Non puoi gestire account Plus';}
+      else puoGestire=true; // lvl===1 o isOwn
     }else if(currLvl===2){
-      // Plus: solo operatori e se stesso
-      if(isOwn||lvl===1) puoGestire=true;
-      else bloccaMsg=lvl===0?'🔒 Non puoi gestire account Admin':'🔒 Non puoi gestire altri account Plus';
+      // Plus: SOLO operatori (lvl 1) e se stesso — MAI Admin (lvl 0)
+      if(lvl===0){bloccaMsg='🔒 Non puoi gestire account Admin';}
+      else if(lvl===2&&!isOwn){bloccaMsg='🔒 Non puoi gestire altri account Plus';}
+      else puoGestire=true; // lvl===1 o isOwn
     }
     html+='<div class="usr-card" data-uname="'+uname+'" onclick="toggleLogUtenteEl(this)">';
     html+='<div class="usr-card-hdr"><div class="usr-name">👤 '+(u.username||'')+'</div><div class="usr-lvl-tag '+lvlClass+'">'+lvlLabel+'</div></div>';
@@ -2462,7 +2491,8 @@ function ui(){
   var postiSecco=parseInt(localStorage.getItem('MAG_POSTI_PLT')||'0')||0;
   var postiFresc=parseInt(localStorage.getItem('MAG_POSTI_FRESCO')||'0')||0;
   var pltBilico=parseInt(localStorage.getItem('MAG_PLT_BILICO')||'0')||0;
-  var postiDispSecco=postiSecco>0?postiSecco-stockSecco:null;
+  // DISP. PLT SECCO = posti totali − PLT normali − PLT Marchesi
+  var postiDispSecco=postiSecco>0?postiSecco-stockSecco-pltMarchesi:null;
   var postiDispFresc=postiFresc>0?postiFresc-stockFresco:null;
   var biliciDispSecco=(postiSecco>0&&pltBilico>0)?Math.floor((postiSecco-stockSecco+partenzePlt-pltMarchesi)/pltBilico):null;
   function _s(id,val){var el=document.getElementById(id);if(el)el.textContent=val!==null?val:'—';}
